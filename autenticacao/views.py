@@ -9,6 +9,7 @@ from django.contrib import auth
 import os
 from django.conf import settings
 from .models import Ativacao
+#from .models import Pessoa
 from hashlib import sha256
 
 
@@ -39,30 +40,32 @@ def cadastro(request):
         if not password_is_valid(request, senha, confirmar_senha):
             return redirect('/auth/cadastro')
 
-        try:
-            user = User.objects.create_user(nome_completo = nome_completo, telefone = telefone, username=usuario, email=email, password=senha, is_active=False)
-            user.save()
+        # try
+        user = User.objects.create_user(username=usuario, email=email, password=senha, is_active=False)
+        user.save()
 
+        #pessoa = Pessoa(nome_completo = nome_completo, telefone = telefone)
+        #pessoa.save()
 # TÁ DANDO ERRO AO TENTAR CADASTRAR NOME COMPLETO E TELEFONE !!!!!!!
 
-            #criação de token para ativação de conta do usuario:
-            token = sha256(f"{usuario}{email}".encode()).hexdigest()
-            ativacao = Ativacao(token = token, user = user)
-            ativacao.save()
+        #criação de token para ativação de conta do usuario:
+        token = sha256(f"{usuario}{email}".encode()).hexdigest()
+        ativacao = Ativacao(token = token, user = user)
+        ativacao.save()
 
 
 # enviar email para confirmação de usuário:
-            # criar pagina html para envio de email
-            path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
-            email_html(path_template, 'Cadastro confirmado', [email,], username=usuario, link_ativacao="127.0.0.1:8000/auth/ativar_conta/{token}")            
+        # criar pagina html para envio de email
+        path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
+        email_html(path_template, 'Cadastro confirmado', [email,], username=usuario, link_ativacao="127.0.0.1:8000/auth/ativar_conta/{token}")            
 
 
-            messages.add_message(request, constants.SUCCESS, 'Usuário cadastrado com sucesso')
-            
-            return redirect('/auth/logar')
-        except:
-            messages.add_message(request, constants.ERROR, 'Erro interno do sistema')
-            return redirect('/auth/cadastro')
+        messages.add_message(request, constants.SUCCESS, 'Usuário cadastrado com sucesso')
+        
+        return redirect('/auth/logar')
+    # except:
+        messages.add_message(request, constants.ERROR, 'Erro interno do sistema')
+        return redirect('/auth/cadastro')
 
 # Criar a view de logar:
 def logar(request):

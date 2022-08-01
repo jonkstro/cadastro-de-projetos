@@ -9,3 +9,10 @@ class Ativacao(models.Model):
     def __str__(self):
         return self.user.username
 
+
+class Pessoa(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nome_completo = models.CharField(max_length=64)
+    telefone = models.CharField(max_length=15)
+    def __str__(self):
+        return self.user.nome_completo
