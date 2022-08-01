@@ -28,8 +28,8 @@ def cadastro(request):
 
 #caso o metodo seja POST (pelo formulario), irá cadastrar a conta
     elif (request.method == "POST"):
-        nome_completo = request.POST.get('nome_completo')
-        telefone = request.POST.get('telefone')
+        nome = request.POST.get('nome')
+        sobrenome = request.POST.get('sobrenome')
         usuario = request.POST.get('usuario')
         senha = request.POST.get('senha')
         email = request.POST.get('email')
@@ -40,11 +40,12 @@ def cadastro(request):
             return redirect('/auth/cadastro')
 
         try:
-            user = User.objects.create_user(nome_completo = nome_completo, telefone = telefone, username=usuario, email=email, password=senha, is_active=False)
+            user = User.objects.create_user(first_name=nome, last_name=sobrenome ,username=usuario, email=email, password=senha, is_active=False)
             user.save()
 
 # TÁ DANDO ERRO AO TENTAR CADASTRAR NOME COMPLETO E TELEFONE !!!!!!!
-
+        # p1 = Pessoa(nome_completo = nome_completo, telefone = telefone)
+        # p1.save()
             #criação de token para ativação de conta do usuario:
             token = sha256(f"{usuario}{email}".encode()).hexdigest()
             ativacao = Ativacao(token = token, user = user)
@@ -58,7 +59,7 @@ def cadastro(request):
 
 
             messages.add_message(request, constants.SUCCESS, 'Usuário cadastrado com sucesso')
-            
+        
             return redirect('/auth/logar')
         except:
             messages.add_message(request, constants.ERROR, 'Erro interno do sistema')

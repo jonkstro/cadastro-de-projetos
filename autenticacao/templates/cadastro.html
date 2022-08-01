@@ -40,12 +40,23 @@
                     <hr>
                     
                     <form action="{% url 'cadastro' %}" method="POST">{% csrf_token %}
-                        <span class="bold">Nome Completo</span>
+                        <div class="row">
+                            <div class="col-md">
+                                <span class="bold">Nome</span>
+                                <input class="form-control input-form" name="nome" type="text" placeholder="Digite seu nome...">
+                            </div>
+
+                            <div class="col-md">
+                                <span class="bold">Sobrenome</span>
+                                <input class="form-control input-form" name="sobrenome" type="text" placeholder="Digite seu sobrenome...">
+                            </div>
+                        </div>
+                        {% comment %} <span class="bold">Nome Completo</span>
                         <input class="form-control input-form" name="nome_completo" type="text" placeholder="Digite seu nome completo...">
                         <br>
                         <span class="bold">Telefone</span>
                         <input class="form-control input-form" name="telefone" type="number" placeholder="Digite seu telefone de contato...">
-                        <br>
+                        <br> {% endcomment %}
                         <span class="bold">Nome de usuário</span>
                         <input class="form-control input-form" name="usuario" type="text" placeholder="Digite seu nome...">
                         <br>
